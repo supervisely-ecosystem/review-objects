@@ -1,0 +1,60 @@
+
+<sly-card title="Visualizations"
+          subtitle="Grid gallery for test"
+          :options="{collapsable: true}"
+          :collapsed.sync="state.collapsed5"
+          ref="step5"
+>
+    <sly-field title="Number of objects on page">
+        <el-input-number v-model="state.rows" :min="1" :max="100"></el-input-number>
+    </sly-field>
+
+    <el-button type="primary" class="regular"
+           @click="command('test_compary_gallery');"
+    >Get gallery
+    </el-button>
+
+
+    <div>
+        </br>
+        <hr>
+        <sly-field title="" class="mt10">
+            </br>
+            <div class="fflex mb15">
+
+                <el-pagination
+                  @current-change="command('update_page')"
+                  :current-page.sync="state.input"
+                  layout="prev, pager, next, jumper"
+                  :page-size="state.rows"
+                  :total="state.maxImages">
+                </el-pagination>
+
+                <el-tag type="gray" class="ml15"
+                        style="font-size: 17px;">current page: {{ state.galleryPage }}/{{ state.galleryMaxPage }}
+                </el-tag>
+
+<!--                <el-tag type="gray" class="ml15"-->
+<!--                        style="font-size: 17px;">total number of images in dataset: {{ state.maxImages }}-->
+<!--                </el-tag>-->
+
+            </div>
+
+            <sly-grid-gallery
+                    v-if="data.perClass"
+                    :content="data.perClass.content">
+                <template v-slot:card-footer="{ annotation }">
+                <div class="mt5" style="text-align: center">
+                   <el-tag type="primary">{{annotation.title}}</el-tag>
+
+                    <div v-for="v,k in annotation.info" style="word-break: break-all;">
+                        <b style="color: #777777;">{{k}}</b>: {{v}}
+                    </div>
+                </div>
+                </template>
+            </sly-grid-gallery>
+
+        </sly-field>
+    </div>
+</sly-card>
+
