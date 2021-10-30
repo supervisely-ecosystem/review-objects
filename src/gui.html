@@ -1,17 +1,17 @@
 
 <sly-card title="Visualizations"
-          subtitle="Grid gallery for test"
+          subtitle="Grid gallery"
           :options="{collapsable: true}"
           :collapsed.sync="state.collapsed5"
           ref="step5"
 >
-    <sly-field title="Number of images on page">
+    <sly-field title="Number of images to review objects">
         <el-input-number v-model="state.rows" :min="1" :max="100"></el-input-number>
     </sly-field>
 
     <el-button type="primary" class="regular"
            @click="command('test_compary_gallery');"
-    >Get gallery
+    >Update gallery
     </el-button>
 
 
