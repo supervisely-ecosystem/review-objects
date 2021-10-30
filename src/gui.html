@@ -5,7 +5,7 @@
           :collapsed.sync="state.collapsed5"
           ref="step5"
 >
-    <sly-field title="Number of objects on page">
+    <sly-field title="Number of images on page">
         <el-input-number v-model="state.rows" :min="1" :max="100"></el-input-number>
     </sly-field>
 
@@ -34,9 +34,9 @@
                         style="font-size: 17px;">current page: {{ state.galleryPage }}/{{ state.galleryMaxPage }}
                 </el-tag>
 
-<!--                <el-tag type="gray" class="ml15"-->
-<!--                        style="font-size: 17px;">total number of images in dataset: {{ state.maxImages }}-->
-<!--                </el-tag>-->
+                <el-tag type="gray" class="ml15"
+                        style="font-size: 17px;">total number of images in project(dataset): {{ state.maxImages }}
+                </el-tag>
 
             </div>
 

@@ -38,6 +38,28 @@ def get_ann_by_id(id, save_path):
     return ann
 
 
+def labels_to_anns(im_names, anns, curr_images_urls):
+    title_names = []
+    new_anns = []
+    new_images_urls = []
+    curr_classes_count = []
+    for im_name, ann, image_url in zip(im_names, anns, curr_images_urls):
+        objects_counter = defaultdict(int)
+        for label in ann.labels:
+            if label.obj_class.name not in curr_classes_count:
+                curr_classes_count.append(label.obj_class.name)
+            objects_counter[label.obj_class.name] += 1
+            new_anns.append(ann.clone(labels=[label]))
+            title_names.append(
+                get_file_name(im_name) + '_' + label.obj_class.name + '_' + str(objects_counter[label.obj_class.name]))
+            new_images_urls.append(image_url)
+
+    for idx, obj_class in enumerate(curr_classes_count):
+        g.classes_layout_map[obj_class] = idx + 1
+
+    return title_names, new_anns, new_images_urls, len(curr_classes_count)
+
+
 def update_gallery_by_page(current_page, state):
 
     images_per_page = state['rows']
@@ -45,24 +67,19 @@ def update_gallery_by_page(current_page, state):
     if len(g.image_ids) % images_per_page != 0:
         max_pages_count += 1
 
-    g.full_gallery = Gallery(g.task_id, g.api, 'data.perClass', g.meta, g.columns_on_page)
-
     curr_images_names = g.images_names[images_per_page * (current_page - 1):images_per_page * current_page]
     curr_images_urls = g.images_urls[images_per_page * (current_page - 1):images_per_page * current_page]
-
     g.curr_images_ids = g.image_ids[images_per_page * (current_page - 1):images_per_page * current_page]
     g.curr_anns = [get_ann_by_id(image_id, g.cache_dir) for image_id in g.curr_images_ids]
 
-    objects_counter = defaultdict(int)
+    curr_images_names, curr_anns, curr_images_urls, curr_classes_count = labels_to_anns(curr_images_names, g.curr_anns,
+                                                                                        curr_images_urls)
+    g.full_gallery = Gallery(g.task_id, g.api, 'data.perClass', g.meta, curr_classes_count)
 
-    for idx, (image_name, ann, image_url) in enumerate(zip(curr_images_names, g.curr_anns, curr_images_urls)):
-        # if idx == images_per_page:
-        #     break
+    for idx, (image_name, ann, image_url) in enumerate(zip(curr_images_names, curr_anns, curr_images_urls)):
         for label in ann.labels:
             obj_class_id = g.classes_layout_map[label.obj_class.name]
-            objects_counter[label.obj_class.name] += 1
-            curr_title = image_name + '_' + label.obj_class.name + '_' + str(objects_counter[label.obj_class.name])
-            g.full_gallery.add_item(title=curr_title, ann=ann, image_url=image_url, col_index=obj_class_id)
+            g.full_gallery.add_item(title=image_name, ann=ann, image_url=image_url, col_index=obj_class_id)
 
     g.full_gallery.update(need_zoom=True)
 
