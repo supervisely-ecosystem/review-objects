@@ -29,6 +29,8 @@ if datasets is None:
 
 meta_json = api.project.get_meta(project_info.id)
 meta = sly.ProjectMeta.from_json(meta_json)
+if len(meta.obj_classes) == 0:
+    raise ValueError("Where is no objects in input project(dataset)")
 
 all_images = []
 for dataset in datasets:
@@ -55,7 +57,4 @@ with_info = True
 full_gallery = None
 curr_images_ids = None
 curr_anns = None
-
 classes_layout_map = {}
-# for idx, obj_class in enumerate(meta.obj_classes):
-#     classes_layout_map[obj_class.name] = idx + 1
