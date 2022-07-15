@@ -5,13 +5,16 @@
     "images"
   ],
   "description": "Visualize objects quality",
-  "docker_image": "supervisely/base-py-sdk:6.1.80",
+  "docker_image": "supervisely/base-py-sdk:6.35.0",
   "main_script": "src/main.py",
   "gui_template": "src/gui.html",
   "task_location": "workspace_tasks",
   "icon": "https://img.icons8.com/fluent/100/000000/lab-items.png",
   "icon_background": "#FFFFFF",
   "context_menu": {
-    "target": ["images_project", "images_dataset"]
+    "target": [
+      "images_project",
+      "images_dataset"
+    ]
   }
 }
